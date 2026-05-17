@@ -19,4 +19,6 @@ export type Dashboard = {
   icon: string | null;
   sort_order: number;
   is_active: boolean;
+  category: string | null;
+  category_order: number | null;
 };
