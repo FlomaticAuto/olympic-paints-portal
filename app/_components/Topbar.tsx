@@ -1,3 +1,5 @@
+import ThemeToggle from "./ThemeToggle";
+
 export default function Topbar({
   fullName,
   isAdmin,
@@ -11,8 +13,9 @@ export default function Topbar({
         <img src="/logo.jpg" alt="Olympic Paints" />
         <strong>Staff Portal</strong>
       </div>
+      <ThemeToggle />
       <div className="user">
-        <span>{fullName ?? "Signed in"}</span>
+        <span className="user-name">{fullName ?? "Signed in"}</span>
         {isAdmin && <a href="/admin">Admin</a>}
         <form method="POST" action="/api/logout">
           <button type="submit" className="linkish">Sign out</button>
