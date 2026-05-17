@@ -2,41 +2,9 @@ import { requireFreshPassword } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import type { Dashboard } from "@/lib/types";
 import Topbar from "./_components/Topbar";
+import ReportCatalog from "./_components/ReportCatalog";
 
 export const dynamic = "force-dynamic";
-
-const CATEGORY_ICON: Record<string, string> = {
-  "Sales Reports": "📊",
-  "Sales Rep KPIs": "🎯",
-  PULSE: "⚡",
-  "Merchandising & Product": "🛒",
-  "E-Commerce": "🛍️",
-  "HR & Operations": "👥",
-  "Strategic Intelligence": "🧠",
-};
-
-const SLUG_ICON: Record<string, string> = {
-  sales: "📊",
-  "store-health": "❤️",
-  velocity: "🚀",
-  "fallen-off": "📉",
-  "geo-map": "🗺️",
-  "kpi-ac": "🅰️",
-  "kpi-ap": "🅰️",
-  "kpi-bv": "🅱️",
-  "kpi-np": "🅽",
-  "kpi-bm": "🅱️",
-  "pulse-leaderboard": "🏆",
-  "pulse-scorecard": "📋",
-  merchandising: "🛒",
-  "product-dev": "🧪",
-  ecommerce: "🛍️",
-  clocking: "⏰",
-  "health-safety": "🦺",
-  vehicles: "🚚",
-  "workspace-health": "💚",
-  "cso-insights": "🧠",
-};
 
 export default async function HomePage() {
   const s = await requireFreshPassword();
@@ -77,22 +45,26 @@ export default async function HomePage() {
     groups[seen.get(cat)!].items.push(d);
   }
 
-  const firstName = s.fullName?.split(" ")[0] ?? "there";
-
   return (
     <>
       <Topbar fullName={s.fullName} isAdmin={!!s.isAdmin} />
 
-      <section className="portal-hero">
-        <div className="hero-logo">
-          <img src="/logo.jpg" alt="Olympic Paints" width={72} height={72} />
+      <section className="report-hero">
+        <div className="report-hero-inner">
+          <div className="report-hero-brand">
+            <div className="report-hero-logo">
+              <img src="/logo.jpg" alt="Olympic Paints" width={56} height={56} />
+            </div>
+            <div className="report-hero-text">
+              <h1>Reports Portal</h1>
+              <p>All live dashboards and reports</p>
+            </div>
+          </div>
+          <div className="report-hero-meta">
+            <div>Olympic Paints · Limpopo, SA</div>
+            <div className="muted">Powered by FlomaticAuto</div>
+          </div>
         </div>
-        <div className="eyebrow">Olympic Paints</div>
-        <h1>Staff Portal</h1>
-        <p className="welcome">
-          Welcome, {firstName}. Pick a report below — your dashboards are grouped
-          by topic.
-        </p>
       </section>
 
       {dashboards.length === 0 ? (
@@ -104,33 +76,7 @@ export default async function HomePage() {
           </p>
         </div>
       ) : (
-        <div className="catalog">
-          {groups.map((g) => (
-            <section key={g.category} className="category-section">
-              <h2 className="category-heading">
-                <span className="category-rule" aria-hidden="true" />
-                <span className="category-icon" aria-hidden="true">
-                  {CATEGORY_ICON[g.category] ?? "📁"}
-                </span>
-                <span className="category-label">{g.category}</span>
-                <span className="category-count">{g.items.length}</span>
-              </h2>
-              <div className="portal-tiles">
-                {g.items.map((d) => {
-                  const icon = SLUG_ICON[d.slug] ?? d.icon ?? d.name.charAt(0);
-                  return (
-                    <a key={d.id} href={`/d/${d.slug}`} className="portal-tile">
-                      <div className="portal-tile-icon">{icon}</div>
-                      <h3>{d.name}</h3>
-                      <p>{d.description}</p>
-                      <span className="portal-tile-cta">Open</span>
-                    </a>
-                  );
-                })}
-              </div>
-            </section>
-          ))}
-        </div>
+        <ReportCatalog groups={groups} />
       )}
     </>
   );

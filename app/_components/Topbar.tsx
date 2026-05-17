@@ -8,13 +8,9 @@ export default function Topbar({
   isAdmin?: boolean;
 }) {
   return (
-    <header className="topbar">
-      <div className="brand">
-        <img src="/logo.jpg" alt="Olympic Paints" />
-        <strong>Staff Portal</strong>
-      </div>
+    <header className="topbar-slim">
       <ThemeToggle />
-      <div className="user">
+      <div className="topbar-slim-user">
         <span className="user-name">{fullName ?? "Signed in"}</span>
         {isAdmin && <a href="/admin">Admin</a>}
         <form method="POST" action="/api/logout">

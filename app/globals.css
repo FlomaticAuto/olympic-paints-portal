@@ -86,7 +86,38 @@ button, input {
   font-size: inherit;
 }
 
-/* ── TOPBAR ────────────────────────────────────────────────────── */
+/* ── SLIM TOPBAR (theme toggle left + user right, above navy hero) ─ */
+.topbar-slim {
+  background: var(--color-surface-secondary);
+  color: var(--color-text-on-navy);
+  padding: 6px 28px;
+  padding-top: calc(6px + env(safe-area-inset-top));
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(0,0,0,0.20);
+}
+.topbar-slim-user {
+  display: flex; align-items: center; gap: 14px;
+  font-size: 12px;
+}
+.topbar-slim-user form { display: inline; }
+.topbar-slim-user .user-name { opacity: 0.75; }
+.topbar-slim-user a {
+  color: var(--color-brand-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.topbar-slim-user a:hover { color: var(--color-brand-hover); }
+.topbar-slim-user .linkish {
+  background: none; border: none;
+  color: var(--color-brand-primary);
+  cursor: pointer; font-size: 12px; padding: 0;
+  font-weight: 600;
+}
+.topbar-slim-user .linkish:hover { color: var(--color-brand-hover); }
+
+/* legacy .topbar (used by admin layout) kept */
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
   gap: 16px;
@@ -95,8 +126,6 @@ button, input {
   background: var(--color-surface-secondary);
   color: var(--color-text-on-navy);
   border-bottom: 1px solid var(--color-border-subtle);
-  -webkit-backdrop-filter: saturate(180%) blur(8px);
-  backdrop-filter: saturate(180%) blur(8px);
 }
 .topbar .brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
 .topbar .brand img { width: 36px; height: 36px; border-radius: 50%; }
@@ -113,30 +142,27 @@ button, input {
 }
 .topbar button.linkish:hover { color: var(--color-brand-hover); }
 
-/* ── THEME TOGGLE ──────────────────────────────────────────────── */
+/* ── THEME TOGGLE (text buttons w/ outline on active) ──────────── */
 .theme-bar {
   display: inline-flex;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: var(--r-pill);
-  padding: 3px;
-  gap: 2px;
+  gap: 4px;
 }
 .theme-bar button {
-  border: none; background: transparent;
-  color: var(--color-text-on-navy);
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255,255,255,0.55);
   font-family: var(--font-display); font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.06em;
-  font-size: 11px; padding: 6px 12px;
-  border-radius: var(--r-pill);
-  cursor: pointer; transition: background .15s, color .15s;
-  opacity: 0.7;
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: var(--r-sm);
+  cursor: pointer; transition: color .15s, border-color .15s, background .15s;
 }
-.theme-bar button:hover { opacity: 1; background: rgba(255,255,255,0.08); }
+.theme-bar button:hover { color: rgba(255,255,255,0.9); }
 .theme-bar button.active {
-  background: var(--color-brand-primary);
-  color: var(--color-text-on-brand);
-  opacity: 1;
+  color: var(--color-brand-primary);
+  border-color: var(--color-brand-primary);
+  background: rgba(245,196,0,0.06);
 }
 
 /* ── LOGIN ─────────────────────────────────────────────────────── */
@@ -188,139 +214,220 @@ button, input {
   font-size: 13px;
 }
 
-/* ── PORTAL HERO ───────────────────────────────────────────────── */
-.portal-hero {
-  text-align: center;
-  padding: 40px 24px 16px;
-  max-width: 760px;
+/* ── REPORT HERO (navy band, brand left + meta right) ─────────── */
+.report-hero {
+  background: var(--color-surface-secondary);
+  color: var(--color-text-on-navy);
+  border-bottom: 2px solid var(--color-brand-primary);
+}
+.report-hero-inner {
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 20px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px;
 }
-.portal-hero .hero-logo {
-  width: 72px; height: 72px; border-radius: 50%; overflow: hidden;
-  margin: 0 auto 16px;
+.report-hero-brand { display: flex; align-items: center; gap: 16px; }
+.report-hero-logo {
+  width: 56px; height: 56px; border-radius: 50%; overflow: hidden;
+  flex-shrink: 0;
+  background: var(--color-brand-primary);
 }
-.portal-hero .hero-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.portal-hero .eyebrow {
-  font-family: var(--font-display); font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.14em;
-  font-size: 12px; color: var(--color-brand-primary);
-  margin-bottom: 8px;
-}
-.portal-hero h1 {
+.report-hero-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.report-hero-text h1 {
   font-family: var(--font-display); font-weight: 900;
-  text-transform: uppercase; letter-spacing: 0.01em;
-  font-size: 44px; line-height: 1;
-  margin: 0 0 12px;
-  color: var(--color-text-primary);
+  text-transform: uppercase; letter-spacing: 0.02em;
+  font-size: 28px; line-height: 1;
+  margin: 0 0 4px;
+  color: var(--color-text-on-navy);
 }
-.portal-hero .welcome {
-  font-size: 16px;
-  color: var(--color-text-secondary);
+.report-hero-text p {
   margin: 0;
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+}
+.report-hero-meta {
+  text-align: right;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
   line-height: 1.5;
+}
+.report-hero-meta .muted { color: rgba(255,255,255,0.45); font-size: 11px; }
+
+/* ── TAB BAR ───────────────────────────────────────────────────── */
+.report-tabs {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 28px;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--color-border-default);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+.report-tab {
+  background: none;
+  border: none;
+  padding: 14px 18px 12px;
+  font-family: var(--font-display); font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color .15s, border-color .15s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.report-tab:hover { color: var(--color-text-secondary); }
+.report-tab.active {
+  color: var(--color-brand-primary);
+  border-bottom-color: var(--color-brand-primary);
+}
+.report-tab-count {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; height: 18px; padding: 0 6px;
+  border-radius: var(--r-pill);
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border-subtle);
+  font-family: var(--font-body); font-weight: 600;
+  font-size: 10px;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0;
+}
+.report-tab.active .report-tab-count {
+  background: rgba(245,196,0,0.15);
+  border-color: rgba(245,196,0,0.4);
+  color: var(--color-brand-primary);
 }
 
 /* ── CATALOG (grouped categories) ──────────────────────────────── */
 .catalog {
-  max-width: 1100px;
-  margin: 16px auto 48px;
-  padding: 0 20px;
+  max-width: 1400px;
+  margin: 20px auto 48px;
+  padding: 0 28px;
 }
-.category-section { margin-bottom: 40px; }
+.category-section { margin-bottom: 36px; }
 .category-section:last-child { margin-bottom: 12px; }
 
 .category-heading {
-  display: flex; align-items: center; gap: 12px;
-  margin: 0 0 18px;
-  font-family: var(--font-display); font-weight: 800;
-  text-transform: uppercase; letter-spacing: 0.08em;
-  font-size: 14px;
-  color: var(--color-text-secondary);
+  margin: 0 0 14px;
+  font-family: var(--font-display); font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  font-size: 11px;
+  color: var(--color-brand-primary);
 }
-.category-heading .category-rule {
-  width: 4px; height: 22px; border-radius: 2px;
-  background: var(--color-brand-primary);
-  flex-shrink: 0;
-}
-.category-heading .category-icon { font-size: 18px; line-height: 1; }
-.category-heading .category-label { flex: 0 0 auto; color: var(--color-text-primary); }
-.category-heading .category-count {
-  display: inline-flex; align-items: center; justify-content: center;
-  min-width: 24px; height: 22px; padding: 0 8px;
-  border-radius: var(--r-pill);
-  background: var(--color-surface-sunken);
-  border: 1px solid var(--color-border-subtle);
-  font-size: 11px; font-weight: 700;
-  color: var(--color-text-tertiary);
-}
+.category-heading .category-label { display: inline-block; }
 
-/* ── PORTAL TILES (matches original staff-portal design) ───────── */
-.portal-tiles {
+/* ── REPORT CARD GRID (matches reference: 4 cols, yellow top accent) ── */
+.report-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
 }
-.portal-tile {
+@media (min-width: 1280px) {
+  .report-grid { grid-template-columns: repeat(4, 1fr); }
+}
+.report-card {
+  position: relative;
   display: flex; flex-direction: column;
-  padding: 28px 28px 24px;
+  padding: 16px 18px 16px;
   min-height: 200px;
   background: var(--color-surface-elevated);
   border: 1px solid var(--color-border-default);
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-md);
+  border-top: 2px solid var(--color-brand-primary);
+  border-radius: var(--r-md);
   text-decoration: none;
   color: var(--color-text-primary);
-  transition: transform .2s, box-shadow .2s, border-color .2s;
-  position: relative;
-  overflow: hidden;
+  transition: transform .15s, box-shadow .15s, border-color .15s;
 }
-.portal-tile:hover,
-.portal-tile:focus-visible {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--color-brand-primary);
+.report-card:hover,
+.report-card:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-border-strong);
+  border-top-color: var(--color-brand-primary);
 }
-.portal-tile:focus-visible {
-  outline: 3px solid var(--color-brand-primary);
-  outline-offset: 2px;
+.report-card:focus-visible { outline: 2px solid var(--color-brand-primary); outline-offset: 2px; }
+
+.report-card-meta {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+  font-size: 11px;
 }
-.portal-tile-icon {
-  width: 56px; height: 56px; border-radius: var(--r-md);
-  background: var(--color-brand-primary);
-  color: var(--color-text-on-brand);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px; font-weight: 700; line-height: 1;
-  margin-bottom: 16px;
-  flex-shrink: 0;
+.report-card-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: var(--r-pill);
+  background: rgba(245,196,0,0.10);
+  border: 1px solid rgba(245,196,0,0.35);
+  color: var(--color-brand-primary);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.02em;
 }
-.portal-tile h2,
-.portal-tile h3 {
+.report-card-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  color: var(--color-text-tertiary);
+  font-size: 11px;
+}
+.report-card-status .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--_teal);
+  box-shadow: 0 0 0 2px rgba(45,140,122,0.20);
+}
+
+.report-card-title {
   font-family: var(--font-display); font-weight: 800;
   text-transform: uppercase; letter-spacing: 0.01em;
-  font-size: 24px; line-height: 1.1;
+  font-size: 18px; line-height: 1.1;
   margin: 0 0 8px;
   color: var(--color-text-primary);
 }
-.portal-tile p {
-  margin: 0 0 14px;
-  font-size: 14px;
-  color: var(--color-text-secondary);
+.report-card-desc {
+  margin: 0 0 12px;
+  font-size: 13px;
   line-height: 1.5;
+  color: var(--color-text-secondary);
   flex: 1;
 }
-.portal-tile-cta {
-  font-family: var(--font-display); font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.08em;
-  font-size: 12px;
-  color: var(--color-brand-primary);
-  display: inline-flex; align-items: center; gap: 8px;
+
+.report-card-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 14px;
+}
+.report-tag {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: transparent;
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.report-card-foot {
   margin-top: auto;
+  display: flex; justify-content: flex-end;
 }
-.portal-tile-cta::after {
-  content: "→"; font-size: 18px;
-  transition: transform .15s;
+.report-card-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  background: var(--color-brand-primary);
+  color: var(--color-text-on-brand);
+  border-radius: var(--r-md);
+  font-family: var(--font-display); font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  font-size: 12px;
+  transition: background .15s;
 }
-.portal-tile:hover .portal-tile-cta::after { transform: translateX(4px); }
+.report-card:hover .report-card-cta {
+  background: var(--color-brand-hover);
+}
 
 /* Legacy .tile selectors kept as aliases so admin pages still render
    if they reference them — they map to the new visual language. */
@@ -636,28 +743,26 @@ button, input {
 
 /* Mobile */
 @media (max-width: 720px) {
-  .topbar {
-    padding: 8px 14px;
-    padding-top: calc(8px + env(safe-area-inset-top));
+  .topbar-slim {
+    padding: 6px 14px;
+    padding-top: calc(6px + env(safe-area-inset-top));
     flex-wrap: wrap;
-    row-gap: 8px;
+    row-gap: 6px;
   }
-  .topbar .brand strong { font-size: 15px; }
-  .topbar .user .user-name { display: none; }
-  .theme-bar { order: 3; width: 100%; justify-content: center; }
-  .theme-bar button { padding: 5px 10px; font-size: 10px; }
-  .portal-hero { padding: 28px 16px 8px; }
-  .portal-hero h1 { font-size: 34px; }
-  .portal-hero .welcome { font-size: 14px; }
-  .portal-hero .hero-logo { width: 60px; height: 60px; margin-bottom: 12px; }
-  .catalog { padding: 0 14px; margin: 12px auto 28px; }
+  .topbar-slim-user .user-name { display: none; }
+  .theme-bar button { padding: 4px 8px; font-size: 10px; }
+  .report-hero-inner { padding: 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .report-hero-meta { text-align: left; }
+  .report-hero-text h1 { font-size: 22px; }
+  .report-tabs { padding: 0 14px; }
+  .report-tab { padding: 12px 12px 10px; font-size: 11px; letter-spacing: 0.06em; }
+  .catalog { padding: 0 14px; margin: 16px auto 32px; }
   .category-section { margin-bottom: 28px; }
-  .category-heading { font-size: 12px; gap: 10px; }
-  .portal-tiles { grid-template-columns: 1fr; gap: 12px; }
-  .portal-tile { padding: 22px 22px 20px; min-height: auto; }
-  .portal-tile h2, .portal-tile h3 { font-size: 20px; }
-  .portal-tile p { font-size: 13px; }
-  .portal-tile-icon { width: 48px; height: 48px; font-size: 24px; margin-bottom: 12px; }
+  .report-grid { grid-template-columns: 1fr; gap: 12px; }
+  .report-card { padding: 14px 16px; min-height: auto; }
+  .report-card-title { font-size: 17px; }
+  .topbar { padding: 8px 14px; padding-top: calc(8px + env(safe-area-inset-top)); }
+  .topbar .brand strong { font-size: 15px; }
   .tiles { grid-template-columns: 1fr; gap: 10px; }
   .tile { min-height: 140px; padding: 16px; }
   .tile h2, .tile h3 { font-size: 17px; }
