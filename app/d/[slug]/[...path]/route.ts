@@ -1,41 +1,10 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
 import { supabase } from "@/lib/supabase";
+import { rewriteHtml } from "@/lib/proxy";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-// This handler proxies sub-paths and assets under /d/<slug>/<...>
-// Shares logic with the top-level route in ../route.ts but is a separate
-// segment because Next routes top-level and catch-all separately.
-
-function rewriteHtml(html: string, slug: string, upstreamBase: URL): string {
-  const localBase = `/d/${slug}/`;
-  return html.replace(
-    /(\b(?:src|href|action)\s*=\s*)(["'])([^"']+)\2/gi,
-    (_full, attr: string, q: string, url: string) => {
-      if (/^(#|data:|javascript:|mailto:|tel:|blob:)/i.test(url)) {
-        return `${attr}${q}${url}${q}`;
-      }
-      if (/^https?:\/\//i.test(url)) {
-        try {
-          const u = new URL(url);
-          if (u.origin !== upstreamBase.origin) {
-            return `${attr}${q}${url}${q}`;
-          }
-          const rel = u.pathname.replace(/^\//, "") + u.search + u.hash;
-          return `${attr}${q}${localBase}${rel}${q}`;
-        } catch {
-          return `${attr}${q}${url}${q}`;
-        }
-      }
-      if (url.startsWith("/")) {
-        return `${attr}${q}${localBase}${url.slice(1)}${q}`;
-      }
-      return `${attr}${q}${localBase}${url}${q}`;
-    },
-  );
-}
 
 export async function GET(
   req: Request,

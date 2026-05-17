@@ -10,6 +10,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <h1>Admin Console</h1>
         <p className="sub">Manage users and dashboard permissions.</p>
         <nav className="admin-tabs">
+          <a href="/">&larr; Portal</a>
           <a href="/admin/users">Users</a>
           <a href="/admin">Permissions</a>
         </nav>
