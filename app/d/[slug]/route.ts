@@ -22,7 +22,9 @@ export async function GET(
 
   const { data: rows } = await supabase
     .from("dashboards")
-    .select("id, slug, upstream_url, is_active, user_dashboards!inner(user_id)")
+    .select(
+      "id, slug, upstream_url, is_active, open_in_new_tab, user_dashboards!inner(user_id)",
+    )
     .eq("slug", slug)
     .eq("is_active", true)
     .eq("user_dashboards.user_id", s.userId);
@@ -30,6 +32,17 @@ export async function GET(
   const dash = rows?.[0];
   if (!dash) {
     return new NextResponse("Not found or access denied.", { status: 404 });
+  }
+
+  // External links (forms etc.) bypass the proxy — redirect straight through.
+  if (dash.open_in_new_tab) {
+    await logAccess({
+      event: "view",
+      userId: s.userId,
+      username: s.username,
+      dashboardSlug: slug,
+    });
+    return NextResponse.redirect(dash.upstream_url, 303);
   }
 
   const upstreamBase = new URL(dash.upstream_url);

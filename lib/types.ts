@@ -21,4 +21,5 @@ export type Dashboard = {
   is_active: boolean;
   category: string | null;
   category_order: number | null;
+  open_in_new_tab: boolean;
 };

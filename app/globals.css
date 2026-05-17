@@ -377,6 +377,15 @@ button, input {
   background: var(--_teal);
   box-shadow: 0 0 0 2px rgba(45,140,122,0.20);
 }
+.report-card-status .dot-form {
+  background: var(--_n500);
+  box-shadow: 0 0 0 2px rgba(45,107,168,0.20);
+}
+.report-card.is-form .report-card-badge {
+  background: rgba(45,107,168,0.10);
+  border-color: rgba(45,107,168,0.40);
+  color: var(--_n300);
+}
 
 .report-card-title {
   font-family: var(--font-display); font-weight: 800;

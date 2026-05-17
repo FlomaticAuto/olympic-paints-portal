@@ -68,6 +68,7 @@ const CATEGORY_BADGE: Record<string, string> = {
   "E-Commerce": "E-Commerce",
   "HR & Operations": "HR · Ops",
   "Strategic Intelligence": "CSO",
+  Forms: "Form",
 };
 
 export default function ReportCatalog({ groups }: { groups: Group[] }) {
@@ -110,12 +111,26 @@ export default function ReportCatalog({ groups }: { groups: Group[] }) {
               {g.items.map((d) => {
                 const tags = buildTags(d.name, d.description);
                 const badge = CATEGORY_BADGE[d.category ?? ""] ?? g.category;
+                const isExternal = d.open_in_new_tab;
+                const href = isExternal ? d.upstream_url : `/d/${d.slug}`;
+                const linkProps = isExternal
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {};
                 return (
-                  <a key={d.id} href={`/d/${d.slug}`} className="report-card">
+                  <a
+                    key={d.id}
+                    href={href}
+                    {...linkProps}
+                    className={`report-card${isExternal ? " is-form" : ""}`}
+                  >
                     <div className="report-card-meta">
                       <span className="report-card-badge">{badge}</span>
                       <span className="report-card-status">
-                        <span className="dot" aria-hidden="true" /> Live
+                        <span
+                          className={`dot${isExternal ? " dot-form" : ""}`}
+                          aria-hidden="true"
+                        />
+                        {isExternal ? "JotForm" : "Live"}
                       </span>
                     </div>
                     <h3 className="report-card-title">{d.name}</h3>
@@ -128,7 +143,9 @@ export default function ReportCatalog({ groups }: { groups: Group[] }) {
                       </div>
                     )}
                     <div className="report-card-foot">
-                      <span className="report-card-cta">Open ↗</span>
+                      <span className="report-card-cta">
+                        {isExternal ? "Open Form ↗" : "Open ↗"}
+                      </span>
                     </div>
                   </a>
                 );

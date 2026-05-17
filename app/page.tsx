@@ -12,7 +12,8 @@ export default async function HomePage() {
   const { data, error } = await supabase
     .from("dashboards")
     .select(
-      `id, slug, name, description, icon, sort_order, is_active, category, category_order,
+      `id, slug, name, description, upstream_url, icon, sort_order, is_active,
+       category, category_order, open_in_new_tab,
        user_dashboards!inner(user_id)`,
     )
     .eq("is_active", true)
