@@ -1,0 +1,21 @@
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# Env
+.env
+.env.local
+.env*.local
+.session-password-backup.txt
+
+# Vercel
+.vercel/
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.log
