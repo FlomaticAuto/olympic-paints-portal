@@ -363,7 +363,7 @@ button, input {
 }
 
 /* ── ADMIN ─────────────────────────────────────────────────────── */
-.admin-wrap { max-width: 1200px; margin: 24px auto; padding: 0 20px; }
+.admin-wrap { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
 .admin-wrap h1 {
   font-family: var(--font-display); font-weight: 900;
   text-transform: uppercase; letter-spacing: 0.02em;
@@ -422,6 +422,210 @@ button, input {
 .toolbar {
   display: flex; justify-content: space-between; align-items: center;
   gap: 12px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.toolbar-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.filter-input {
+  padding: 6px 10px;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--r-md);
+  color: var(--color-text-primary);
+  font-size: 13px;
+  min-width: 200px;
+}
+.filter-input:focus { outline: 2px solid var(--color-brand-primary); outline-offset: 1px; }
+
+/* ── PERMISSIONS MATRIX (frozen pane, narrow wrapped headers) ──── */
+.matrix-help {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  margin: 0 0 10px;
+}
+.matrix-scroll {
+  max-height: calc(100dvh - 280px);
+  min-height: 360px;
+  overflow: auto;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--r-md);
+  background: var(--color-surface-elevated);
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+.matrix-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: max-content;
+  font-size: 12px;
+}
+.matrix-table th,
+.matrix-table td {
+  border-right: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding: 6px 8px;
+  vertical-align: middle;
+  background: var(--color-surface-elevated);
+}
+.matrix-table thead th { border-bottom-width: 2px; }
+
+/* Column headers — narrow, wrapped, clickable */
+.matrix-col-h {
+  position: sticky; top: 0;
+  z-index: 2;
+  width: 110px;
+  min-width: 110px;
+  max-width: 110px;
+  background: var(--color-surface-sunken);
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 11px;
+  color: var(--color-text-primary);
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  padding: 8px 6px 6px;
+  line-height: 1.2;
+  vertical-align: bottom;
+  transition: background .15s;
+}
+.matrix-col-h:hover { background: var(--color-surface-overlay); }
+.matrix-col-h .col-name {
+  display: block;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+.matrix-col-h .col-off {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--color-danger-fg);
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-bd);
+  border-radius: var(--r-sm);
+  padding: 1px 4px;
+  text-transform: uppercase;
+}
+.matrix-col-h .col-count {
+  display: block;
+  margin-top: 4px;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0;
+  font-family: var(--font-body);
+}
+.matrix-col-h.off .col-name { opacity: 0.6; text-decoration: line-through; }
+
+/* Corner cell (top-left) — locked both directions */
+.matrix-corner {
+  position: sticky; top: 0; left: 0;
+  z-index: 3;
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+  background: var(--color-surface-sunken);
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  text-align: left;
+  padding: 10px 12px;
+  border-right: 2px solid var(--color-border-default);
+}
+
+/* Row headers — locked left, clickable */
+.matrix-row-h {
+  position: sticky; left: 0;
+  z-index: 1;
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+  background: var(--color-surface-elevated);
+  text-align: left;
+  padding: 8px 12px;
+  cursor: pointer;
+  user-select: none;
+  border-right: 2px solid var(--color-border-default);
+  transition: background .15s;
+}
+.matrix-row-h:hover { background: var(--color-surface-overlay); }
+.matrix-row-h .row-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--color-text-primary);
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  line-height: 1.2;
+}
+.matrix-row-h .row-username {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  margin-top: 2px;
+}
+.matrix-row-h .row-count {
+  font-size: 10px;
+  color: var(--color-text-tertiary);
+  margin-top: 3px;
+  font-weight: 600;
+}
+.matrix-row-h .badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: var(--r-sm);
+  letter-spacing: 0.04em;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+}
+.matrix-row-h .badge.admin {
+  background: var(--color-brand-primary);
+  color: var(--color-text-on-brand);
+}
+.matrix-row-h .badge.danger {
+  background: var(--color-danger-bg);
+  color: var(--color-danger-fg);
+  border: 1px solid var(--color-danger-bd);
+}
+
+/* Cells */
+.matrix-cell {
+  width: 110px;
+  min-width: 110px;
+  max-width: 110px;
+  text-align: center;
+  padding: 0;
+}
+.matrix-cell input[type=checkbox] {
+  width: 20px; height: 20px;
+  cursor: pointer;
+  accent-color: var(--color-brand-primary);
+  margin: 8px 0;
+}
+.matrix-table tbody tr:hover .matrix-row-h,
+.matrix-table tbody tr:hover .matrix-cell {
+  background: var(--color-surface-sunken);
+}
+
+/* Mobile — keep matrix usable on phones */
+@media (max-width: 720px) {
+  .matrix-scroll { max-height: calc(100dvh - 240px); }
+  .matrix-corner,
+  .matrix-row-h {
+    width: 140px; min-width: 140px; max-width: 140px;
+    padding: 6px 8px;
+  }
+  .matrix-row-h .row-name { font-size: 12px; }
+  .matrix-col-h,
+  .matrix-cell { width: 78px; min-width: 78px; max-width: 78px; }
+  .matrix-col-h { font-size: 10px; padding: 6px 4px; }
+  .matrix-cell input[type=checkbox] { width: 18px; height: 18px; }
 }
 .notice {
   padding: 10px 14px; border-radius: var(--r-md);
