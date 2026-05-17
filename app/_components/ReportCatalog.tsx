@@ -130,7 +130,7 @@ export default function ReportCatalog({ groups }: { groups: Group[] }) {
                           className={`dot${isExternal ? " dot-form" : ""}`}
                           aria-hidden="true"
                         />
-                        {isExternal ? "JotForm" : "Live"}
+                        {isExternal ? (d.upstream_url?.includes("jotform.com") ? "JotForm" : "Form") : "Live"}
                       </span>
                     </div>
                     <h3 className="report-card-title">{d.name}</h3>
