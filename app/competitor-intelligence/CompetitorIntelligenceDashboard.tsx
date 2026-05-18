@@ -73,6 +73,7 @@ export default function CompetitorIntelligenceDashboard() {
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("competitor");
   const [sortAsc, setSortAsc] = useState(true);
+  const [matchedOnly, setMatchedOnly] = useState(false);
 
   useEffect(() => {
     fetch("/competitor-data.json")
@@ -102,6 +103,7 @@ export default function CompetitorIntelligenceDashboard() {
       .filter((r) => sizeFilter === "all" || r.size_bucket === sizeFilter)
       .filter((r) => compFilter === "all" || r.competitor === compFilter)
       .filter((r) => channelFilter === "all" || r.channel === channelFilter)
+      .filter((r) => !matchedOnly || r.oly_product !== null)
       .filter((r) => {
         if (!search) return true;
         const q = search.toLowerCase();
@@ -125,7 +127,7 @@ export default function CompetitorIntelligenceDashboard() {
           ? (av as number) - (bv as number)
           : (bv as number) - (av as number);
       });
-  }, [data, sizeFilter, compFilter, channelFilter, search, sortKey, sortAsc]);
+  }, [data, sizeFilter, compFilter, channelFilter, matchedOnly, search, sortKey, sortAsc]);
 
   const stats = useMemo(() => {
     const withPrice = filtered.filter((r) => r.price_excl !== null);
@@ -220,6 +222,25 @@ export default function CompetitorIntelligenceDashboard() {
                 {ch === "all" ? "All Channels" : ch.charAt(0).toUpperCase() + ch.slice(1)}
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Matched */}
+        <div className={styles.filterGroup}>
+          <span className={styles.filterLabel}>MATCH</span>
+          <div className={styles.pills}>
+            <button
+              className={!matchedOnly ? styles.pillActive : styles.pill}
+              onClick={() => setMatchedOnly(false)}
+            >
+              All
+            </button>
+            <button
+              className={matchedOnly ? styles.pillActive : styles.pill}
+              onClick={() => setMatchedOnly(true)}
+            >
+              Matched
+            </button>
           </div>
         </div>
 
