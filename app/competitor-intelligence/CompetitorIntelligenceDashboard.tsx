@@ -10,11 +10,14 @@ type Row = {
   colour: string;
   size: string;
   size_bucket: string;
+  channel: "wholesale" | "retail";
   price_excl: number | null;
   price_incl: number | null;
   vat_status: string;
   price_date: string;
-  source: string;
+  oly_product: string | null;
+  oly_price_excl: number | null;
+  diff_pct: number | null;
 };
 
 type Dataset = {
@@ -45,22 +48,31 @@ const COMP_COLOURS: Record<string, string> = {
   Plascon:         "#1A3D6E",
 };
 
-function fmt(v: number | null): string {
+function fmt(v: number | null | undefined): string {
   if (v === null || v === undefined) return "—";
   return `R ${v.toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-type SortKey = "competitor" | "category" | "product" | "size" | "price_excl" | "price_incl";
+function fmtDiff(v: number | null | undefined): { text: string; cls: string } {
+  if (v === null || v === undefined) return { text: "—", cls: styles.diffNull };
+  const sign = v > 0 ? "+" : "";
+  const text = `${sign}${v.toFixed(1)}%`;
+  // Positive diff = competitor is MORE expensive than Olympic (good for us)
+  const cls = v > 5 ? styles.diffGood : v < -5 ? styles.diffBad : styles.diffNeutral;
+  return { text, cls };
+}
+
+type SortKey = "competitor" | "category" | "product" | "size" | "price_excl" | "diff_pct";
 
 export default function CompetitorIntelligenceDashboard() {
   const [data, setData] = useState<Dataset | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [sizeFilter, setSizeFilter] = useState("all");
   const [compFilter, setCompFilter] = useState("all");
+  const [channelFilter, setChannelFilter] = useState<"all" | "wholesale" | "retail">("all");
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("competitor");
   const [sortAsc, setSortAsc] = useState(true);
-  const [vatMode, setVatMode] = useState<"excl" | "incl">("excl");
 
   useEffect(() => {
     fetch("/competitor-data.json")
@@ -89,6 +101,7 @@ export default function CompetitorIntelligenceDashboard() {
     return data.rows
       .filter((r) => sizeFilter === "all" || r.size_bucket === sizeFilter)
       .filter((r) => compFilter === "all" || r.competitor === compFilter)
+      .filter((r) => channelFilter === "all" || r.channel === channelFilter)
       .filter((r) => {
         if (!search) return true;
         const q = search.toLowerCase();
@@ -97,19 +110,22 @@ export default function CompetitorIntelligenceDashboard() {
           r.category.toLowerCase().includes(q) ||
           r.product.toLowerCase().includes(q) ||
           r.colour.toLowerCase().includes(q) ||
-          r.size.toLowerCase().includes(q)
+          r.size.toLowerCase().includes(q) ||
+          (r.oly_product ?? "").toLowerCase().includes(q)
         );
       })
       .sort((a, b) => {
         let av: string | number | null = a[sortKey];
         let bv: string | number | null = b[sortKey];
-        if (av === null) av = sortAsc ? Infinity : -Infinity;
-        if (bv === null) bv = sortAsc ? Infinity : -Infinity;
+        if (av === null || av === undefined) av = sortAsc ? "￿" : "";
+        if (bv === null || bv === undefined) bv = sortAsc ? "￿" : "";
         if (typeof av === "string" && typeof bv === "string")
           return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
-        return sortAsc ? (av as number) - (bv as number) : (bv as number) - (av as number);
+        return sortAsc
+          ? (av as number) - (bv as number)
+          : (bv as number) - (av as number);
       });
-  }, [data, sizeFilter, compFilter, search, sortKey, sortAsc]);
+  }, [data, sizeFilter, compFilter, channelFilter, search, sortKey, sortAsc]);
 
   const stats = useMemo(() => {
     const withPrice = filtered.filter((r) => r.price_excl !== null);
@@ -119,7 +135,12 @@ export default function CompetitorIntelligenceDashboard() {
         : withPrice.reduce((s, r) => s + r.price_excl!, 0) / withPrice.length;
     const min = withPrice.length === 0 ? null : Math.min(...withPrice.map((r) => r.price_excl!));
     const max = withPrice.length === 0 ? null : Math.max(...withPrice.map((r) => r.price_excl!));
-    return { avg, min, max, count: filtered.length };
+    const withDiff = filtered.filter((r) => r.diff_pct !== null);
+    const avgDiff =
+      withDiff.length === 0
+        ? null
+        : withDiff.reduce((s, r) => s + r.diff_pct!, 0) / withDiff.length;
+    return { avg, min, max, count: filtered.length, avgDiff, diffCount: withDiff.length };
   }, [filtered]);
 
   function toggleSort(key: SortKey) {
@@ -135,6 +156,17 @@ export default function CompetitorIntelligenceDashboard() {
   if (error) return <div className={styles.error}>Failed to load data: {error}</div>;
   if (!data) return <div className={styles.loading}>Loading competitor intelligence…</div>;
 
+  // Retail rows always show incl VAT; wholesale rows show excl VAT
+  function displayPrice(r: Row): number | null {
+    if (r.channel === "retail") return r.price_incl;
+    return r.price_excl;
+  }
+  function priceLabel(r: Row): string {
+    return r.channel === "retail" ? "Incl VAT" : "Excl VAT";
+  }
+
+  const avgDiffFmt = fmtDiff(stats.avgDiff);
+
   return (
     <div className={styles.root}>
       {/* ── Page header ── */}
@@ -144,22 +176,6 @@ export default function CompetitorIntelligenceDashboard() {
           <p className={styles.subtitle}>
             {data.count} price points · {competitors.length} competitors · Generated {data.generated}
           </p>
-        </div>
-        <div className={styles.headerRight}>
-          <div className={styles.vatToggle}>
-            <button
-              className={vatMode === "excl" ? styles.vatActive : styles.vatBtn}
-              onClick={() => setVatMode("excl")}
-            >
-              Excl VAT
-            </button>
-            <button
-              className={vatMode === "incl" ? styles.vatActive : styles.vatBtn}
-              onClick={() => setVatMode("incl")}
-            >
-              Incl VAT
-            </button>
-          </div>
         </div>
       </header>
 
@@ -171,21 +187,43 @@ export default function CompetitorIntelligenceDashboard() {
         </div>
         <div className={styles.stat}>
           <span className={styles.statVal}>{fmt(stats.avg)}</span>
-          <span className={styles.statLbl}>AVG PRICE EXCL</span>
+          <span className={styles.statLbl}>AVG COMP PRICE EXCL</span>
         </div>
         <div className={styles.stat}>
           <span className={styles.statVal}>{fmt(stats.min)}</span>
-          <span className={styles.statLbl}>MIN PRICE EXCL</span>
+          <span className={styles.statLbl}>MIN COMP PRICE EXCL</span>
         </div>
         <div className={styles.stat}>
           <span className={styles.statVal}>{fmt(stats.max)}</span>
-          <span className={styles.statLbl}>MAX PRICE EXCL</span>
+          <span className={styles.statLbl}>MAX COMP PRICE EXCL</span>
         </div>
+        {stats.diffCount > 0 && (
+          <div className={styles.stat}>
+            <span className={`${styles.statVal} ${avgDiffFmt.cls}`}>{avgDiffFmt.text}</span>
+            <span className={styles.statLbl}>AVG PRICE DIFF ({stats.diffCount} matched)</span>
+          </div>
+        )}
       </div>
 
       {/* ── Filter bar ── */}
       <div className={styles.filterBar}>
-        {/* Size pills */}
+        {/* Channel */}
+        <div className={styles.filterGroup}>
+          <span className={styles.filterLabel}>CHANNEL</span>
+          <div className={styles.pills}>
+            {(["all", "wholesale", "retail"] as const).map((ch) => (
+              <button
+                key={ch}
+                className={channelFilter === ch ? styles.pillActive : styles.pill}
+                onClick={() => setChannelFilter(ch)}
+              >
+                {ch === "all" ? "All Channels" : ch.charAt(0).toUpperCase() + ch.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Size */}
         <div className={styles.filterGroup}>
           <span className={styles.filterLabel}>SIZE</span>
           <div className={styles.pills}>
@@ -203,7 +241,7 @@ export default function CompetitorIntelligenceDashboard() {
           </div>
         </div>
 
-        {/* Competitor chips */}
+        {/* Competitor */}
         <div className={styles.filterGroup}>
           <span className={styles.filterLabel}>BRAND</span>
           <div className={styles.pills}>
@@ -236,7 +274,7 @@ export default function CompetitorIntelligenceDashboard() {
           <input
             className={styles.searchInput}
             type="search"
-            placeholder="Product, category, colour…"
+            placeholder="Product, category, colour, Olympic product…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -261,59 +299,83 @@ export default function CompetitorIntelligenceDashboard() {
               <th onClick={() => toggleSort("size")} className={styles.thBtn}>
                 Size <SortIcon k="size" />
               </th>
-              <th
-                onClick={() => toggleSort(vatMode === "excl" ? "price_excl" : "price_incl")}
-                className={`${styles.thBtn} ${styles.priceCol}`}
-              >
-                Price ({vatMode === "excl" ? "Excl VAT" : "Incl VAT"}){" "}
-                <SortIcon k={vatMode === "excl" ? "price_excl" : "price_incl"} />
+              <th className={styles.chCol}>Channel</th>
+              <th onClick={() => toggleSort("price_excl")} className={`${styles.thBtn} ${styles.priceCol}`}>
+                Comp Price <SortIcon k="price_excl" />
               </th>
-              <th>VAT Status</th>
+              <th className={styles.priceCol}>Olympic Price</th>
+              <th onClick={() => toggleSort("diff_pct")} className={`${styles.thBtn} ${styles.priceCol}`}>
+                Diff % <SortIcon k="diff_pct" />
+              </th>
               <th>Date</th>
-              <th>Source</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={9} className={styles.empty}>
+                <td colSpan={10} className={styles.empty}>
                   No results match your filters.
                 </td>
               </tr>
             )}
-            {filtered.map((r, i) => (
-              <tr key={i} className={i % 2 === 1 ? styles.rowAlt : ""}>
-                <td>
-                  <span
-                    className={styles.compBadge}
-                    style={{ background: COMP_COLOURS[r.competitor] ?? "#5C6B7A" }}
-                  >
-                    {r.competitor}
-                  </span>
-                </td>
-                <td className={styles.catCell}>{r.category}</td>
-                <td className={styles.productCell}>{r.product}</td>
-                <td>{r.colour || "—"}</td>
-                <td className={styles.sizeCell}>
-                  <span className={styles.sizeTag}>{r.size || "—"}</span>
-                </td>
-                <td className={styles.priceCell}>
-                  {fmt(vatMode === "excl" ? r.price_excl : r.price_incl)}
-                </td>
-                <td className={styles.vatCell}>{r.vat_status}</td>
-                <td className={styles.dateCell}>{r.price_date}</td>
-                <td className={styles.sourceCell} title={r.source}>
-                  {r.source.length > 32 ? r.source.slice(0, 32) + "…" : r.source}
-                </td>
-              </tr>
-            ))}
+            {filtered.map((r, i) => {
+              const diff = fmtDiff(r.diff_pct);
+              return (
+                <tr key={i} className={i % 2 === 1 ? styles.rowAlt : ""}>
+                  <td>
+                    <span
+                      className={styles.compBadge}
+                      style={{ background: COMP_COLOURS[r.competitor] ?? "#5C6B7A" }}
+                    >
+                      {r.competitor}
+                    </span>
+                  </td>
+                  <td className={styles.catCell}>{r.category}</td>
+                  <td className={styles.productCell}>{r.product}</td>
+                  <td>{r.colour || "—"}</td>
+                  <td className={styles.sizeCell}>
+                    <span className={styles.sizeTag}>{r.size || "—"}</span>
+                  </td>
+                  <td>
+                    <span className={r.channel === "retail" ? styles.badgeRetail : styles.badgeWholesale}>
+                      {r.channel === "retail" ? "Retail" : "Wholesale"}
+                    </span>
+                  </td>
+                  <td className={styles.priceCell}>
+                    <span>{fmt(displayPrice(r))}</span>
+                    <span className={styles.vatLabel}>{priceLabel(r)}</span>
+                  </td>
+                  <td className={styles.priceCell}>
+                    {r.oly_product ? (
+                      <>
+                        <span>{fmt(r.oly_price_excl)}</span>
+                        <span className={styles.vatLabel}>
+                          {r.oly_price_excl ? "Excl VAT" : ""}
+                        </span>
+                        <div className={styles.olyProduct}>{r.oly_product}</div>
+                      </>
+                    ) : (
+                      <span className={styles.noMatch}>No match</span>
+                    )}
+                  </td>
+                  <td className={`${styles.priceCell} ${diff.cls}`}>
+                    {diff.text}
+                  </td>
+                  <td className={styles.dateCell}>{r.price_date}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
       <div className={styles.footer}>
         Showing {filtered.length} of {data.count} price points ·{" "}
-        <a href="/" className={styles.backLink}>← Back to Portal</a>
+        <span className={styles.footNote}>
+          Diff % = (comp excl VAT − Olympic list price excl VAT) ÷ Olympic list price.
+          Positive = competitor more expensive.
+        </span>{" "}
+        · <a href="/" className={styles.backLink}>← Back to Portal</a>
       </div>
     </div>
   );

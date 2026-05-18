@@ -37,34 +37,6 @@
   margin: 0;
 }
 
-.headerRight { display: flex; align-items: center; gap: 0.75rem; padding-top: 0.25rem; }
-
-/* VAT toggle */
-.vatToggle {
-  display: flex;
-  border: 1px solid var(--color-border-default, rgba(255,255,255,0.10));
-  border-radius: 6px;
-  overflow: hidden;
-}
-.vatBtn, .vatActive {
-  padding: 0.35rem 0.8rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  border: none;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-.vatBtn {
-  background: var(--color-surface-base, #1A1A18);
-  color: var(--color-text-secondary);
-}
-.vatActive {
-  background: var(--color-brand-primary, #F5C400);
-  color: #0D0D0B;
-}
-
 /* ── Stat strip ──────────────────────────────────────────────── */
 .statStrip {
   display: flex;
@@ -97,6 +69,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--color-text-tertiary, #5C5B58);
+  text-align: center;
 }
 
 /* ── Filter bar ──────────────────────────────────────────────── */
@@ -122,7 +95,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--color-text-tertiary);
-  min-width: 3.5rem;
+  min-width: 4rem;
   flex-shrink: 0;
 }
 
@@ -157,7 +130,7 @@
 .searchInput {
   flex: 1;
   min-width: 200px;
-  max-width: 360px;
+  max-width: 400px;
   padding: 0.4rem 0.75rem;
   background: var(--color-surface-elevated, #2E2E2C);
   border: 1px solid var(--color-border-default);
@@ -242,13 +215,15 @@
 .catCell {
   color: var(--color-text-secondary);
   font-size: 0.75rem;
-  max-width: 180px;
+  max-width: 160px;
 }
 
 .productCell {
-  max-width: 240px;
+  max-width: 220px;
   font-weight: 500;
 }
+
+.sizeCell { white-space: nowrap; }
 
 .sizeTag {
   display: inline-block;
@@ -263,33 +238,105 @@
   white-space: nowrap;
 }
 
+/* Channel badges */
+.chCol { white-space: nowrap; }
+
+.badgeWholesale, .badgeRetail {
+  display: inline-block;
+  padding: 0.18rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.badgeWholesale {
+  background: rgba(45,107,168,0.20);
+  color: #B8CCE8;
+  border: 1px solid rgba(107,158,208,0.25);
+}
+
+.badgeRetail {
+  background: rgba(155,125,191,0.18);
+  color: #C8B8E8;
+  border: 1px solid rgba(155,125,191,0.30);
+}
+
+/* Price columns */
 .priceCol { text-align: right; }
+
 .priceCell {
   text-align: right;
+  white-space: nowrap;
+}
+
+.priceCell > span:first-child {
   font-family: var(--font-display, 'Barlow Condensed', sans-serif);
   font-weight: 700;
   font-size: 0.88rem;
   color: var(--color-brand-primary, #F5C400);
-  white-space: nowrap;
 }
 
-.vatCell {
+.vatLabel {
+  display: block;
+  font-size: 0.58rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-tertiary);
+  margin-top: 0.1rem;
+}
+
+.olyProduct {
+  font-size: 0.6rem;
+  color: var(--color-text-tertiary);
+  margin-top: 0.15rem;
+  font-style: italic;
+}
+
+.noMatch {
   font-size: 0.68rem;
   color: var(--color-text-tertiary);
-  white-space: nowrap;
+  font-style: italic;
+}
+
+/* Diff % column */
+.diffGood {
+  font-family: var(--font-display, 'Barlow Condensed', sans-serif);
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #2D8C7A;
+  text-align: right;
+}
+
+.diffBad {
+  font-family: var(--font-display, 'Barlow Condensed', sans-serif);
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #E86060;
+  text-align: right;
+}
+
+.diffNeutral {
+  font-family: var(--font-display, 'Barlow Condensed', sans-serif);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  text-align: right;
+}
+
+.diffNull {
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+  text-align: right;
 }
 
 .dateCell {
   font-size: 0.72rem;
   color: var(--color-text-secondary);
   white-space: nowrap;
-}
-
-.sourceCell {
-  font-size: 0.65rem;
-  color: var(--color-text-tertiary);
-  max-width: 200px;
-  cursor: default;
 }
 
 /* Empty / loading / error states */
@@ -321,17 +368,32 @@
 /* ── Footer ──────────────────────────────────────────────────── */
 .footer {
   padding: 1rem 1.5rem;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   color: var(--color-text-tertiary);
   text-align: right;
   margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.footNote {
+  color: var(--color-text-tertiary);
+  font-style: italic;
 }
 
 .backLink {
   color: var(--color-brand-primary, #F5C400);
   text-decoration: none;
+  white-space: nowrap;
 }
 .backLink:hover { text-decoration: underline; }
+
+/* Stat val colours for diff */
+.statVal.diffGood { color: #2D8C7A; }
+.statVal.diffBad  { color: #E86060; }
 
 /* ── Mobile ──────────────────────────────────────────────────── */
 @media (max-width: 768px) {
@@ -339,8 +401,9 @@
   .statStrip { flex-wrap: wrap; }
   .stat { min-width: 50%; }
   .filterBar { padding: 0.75rem 1rem; }
-  .tableWrap { margin: 0 0.75rem; }
+  .tableWrap { margin: 0 0.5rem; }
   .title { font-size: 1.5rem; }
-  .catCell, .sourceCell { display: none; }
-  .productCell { max-width: 160px; }
+  .catCell { display: none; }
+  .olyProduct { display: none; }
+  .productCell { max-width: 140px; }
 }
