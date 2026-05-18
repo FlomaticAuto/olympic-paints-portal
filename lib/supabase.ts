@@ -14,3 +14,8 @@ export const supabase = createClient(url, key, {
   auth: { persistSession: false },
   db: { schema: "portal" },
 });
+
+export const supabasePublic = createClient(url, key, {
+  auth: { persistSession: false },
+  db: { schema: "public" },
+});
