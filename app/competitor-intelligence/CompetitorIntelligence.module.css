@@ -1,0 +1,346 @@
+/* ── Competitor Intelligence Dashboard ──────────────────────── */
+
+.root {
+  min-height: 100vh;
+  background: var(--color-surface-page, #0D0D0B);
+  color: var(--color-text-primary, #E8E7E2);
+  font-family: var(--font-body, 'Barlow', sans-serif);
+  padding-bottom: 3rem;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 1.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-border-subtle, rgba(255,255,255,0.06));
+}
+
+.headerLeft { display: flex; flex-direction: column; gap: 0.25rem; }
+
+.title {
+  font-family: var(--font-display, 'Barlow Condensed', sans-serif);
+  font-weight: 900;
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #949390);
+  margin: 0;
+}
+
+.headerRight { display: flex; align-items: center; gap: 0.75rem; padding-top: 0.25rem; }
+
+/* VAT toggle */
+.vatToggle {
+  display: flex;
+  border: 1px solid var(--color-border-default, rgba(255,255,255,0.10));
+  border-radius: 6px;
+  overflow: hidden;
+}
+.vatBtn, .vatActive {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.vatBtn {
+  background: var(--color-surface-base, #1A1A18);
+  color: var(--color-text-secondary);
+}
+.vatActive {
+  background: var(--color-brand-primary, #F5C400);
+  color: #0D0D0B;
+}
+
+/* ── Stat strip ──────────────────────────────────────────────── */
+.statStrip {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-base, #1A1A18);
+}
+
+.stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-right: 1px solid var(--color-border-subtle);
+  gap: 0.2rem;
+}
+.stat:last-child { border-right: none; }
+
+.statVal {
+  font-family: var(--font-display, 'Barlow Condensed', sans-serif);
+  font-weight: 900;
+  font-size: 1.25rem;
+  color: var(--color-brand-primary, #F5C400);
+}
+
+.statLbl {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-tertiary, #5C5B58);
+}
+
+/* ── Filter bar ──────────────────────────────────────────────── */
+.filterBar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: var(--color-surface-sunken, #0D0D0B);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filterLabel {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-tertiary);
+  min-width: 3.5rem;
+  flex-shrink: 0;
+}
+
+.pills { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+.pill, .pillActive {
+  padding: 0.28rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  border: 1px solid;
+}
+
+.pill {
+  background: transparent;
+  border-color: var(--color-border-default, rgba(255,255,255,0.10));
+  color: var(--color-text-secondary);
+}
+.pill:hover {
+  border-color: var(--color-border-strong, rgba(255,255,255,0.20));
+  color: var(--color-text-primary);
+}
+
+.pillActive {
+  background: var(--color-brand-primary, #F5C400);
+  border-color: var(--color-brand-primary, #F5C400);
+  color: #0D0D0B;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 200px;
+  max-width: 360px;
+  padding: 0.4rem 0.75rem;
+  background: var(--color-surface-elevated, #2E2E2C);
+  border: 1px solid var(--color-border-default);
+  border-radius: 6px;
+  color: var(--color-text-primary);
+  font-size: 0.82rem;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.searchInput:focus { border-color: var(--color-brand-primary, #F5C400); }
+.searchInput::placeholder { color: var(--color-text-tertiary); }
+
+/* ── Table ───────────────────────────────────────────────────── */
+.tableWrap {
+  overflow-x: auto;
+  margin: 0 1.5rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.table thead {
+  background: var(--color-surface-secondary, #1A3D6E);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.table th {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #E8E7E2;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  user-select: none;
+}
+
+.thBtn { cursor: pointer; }
+.thBtn:hover { color: var(--color-brand-primary, #F5C400); }
+
+.sortIcon {
+  margin-left: 0.3rem;
+  opacity: 0.6;
+  font-size: 0.65rem;
+}
+
+.table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  vertical-align: middle;
+  color: var(--color-text-primary);
+}
+
+.table tr:last-child td { border-bottom: none; }
+
+.rowAlt { background: var(--color-surface-overlay, rgba(255,255,255,0.04)); }
+
+.table tr:hover td { background: rgba(245,196,0,0.05); }
+
+/* Specific column styles */
+.compBadge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.catCell {
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  max-width: 180px;
+}
+
+.productCell {
+  max-width: 240px;
+  font-weight: 500;
+}
+
+.sizeTag {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  background: var(--color-surface-elevated, #2E2E2C);
+  border: 1px solid var(--color-border-default);
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-family: var(--font-display, 'Barlow Condensed', sans-serif);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.priceCol { text-align: right; }
+.priceCell {
+  text-align: right;
+  font-family: var(--font-display, 'Barlow Condensed', sans-serif);
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--color-brand-primary, #F5C400);
+  white-space: nowrap;
+}
+
+.vatCell {
+  font-size: 0.68rem;
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+}
+
+.dateCell {
+  font-size: 0.72rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.sourceCell {
+  font-size: 0.65rem;
+  color: var(--color-text-tertiary);
+  max-width: 200px;
+  cursor: default;
+}
+
+/* Empty / loading / error states */
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+
+.loading {
+  padding: 3rem;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-family: var(--font-display, 'Barlow Condensed', sans-serif);
+  font-size: 1.25rem;
+  text-transform: uppercase;
+}
+
+.error {
+  padding: 2rem 1.5rem;
+  color: var(--color-danger-fg, #FDDCDC);
+  background: var(--color-danger-bg, rgba(232,96,96,0.12));
+  border: 1px solid var(--color-danger-bd, rgba(232,96,96,0.30));
+  border-radius: 8px;
+  margin: 1.5rem;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.footer {
+  padding: 1rem 1.5rem;
+  font-size: 0.72rem;
+  color: var(--color-text-tertiary);
+  text-align: right;
+  margin-top: 0.5rem;
+}
+
+.backLink {
+  color: var(--color-brand-primary, #F5C400);
+  text-decoration: none;
+}
+.backLink:hover { text-decoration: underline; }
+
+/* ── Mobile ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .header { flex-direction: column; gap: 0.75rem; padding: 1rem; }
+  .statStrip { flex-wrap: wrap; }
+  .stat { min-width: 50%; }
+  .filterBar { padding: 0.75rem 1rem; }
+  .tableWrap { margin: 0 0.75rem; }
+  .title { font-size: 1.5rem; }
+  .catCell, .sourceCell { display: none; }
+  .productCell { max-width: 160px; }
+}
