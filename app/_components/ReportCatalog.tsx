@@ -112,7 +112,12 @@ export default function ReportCatalog({ groups }: { groups: Group[] }) {
                 const tags = buildTags(d.name, d.description);
                 const badge = CATEGORY_BADGE[d.category ?? ""] ?? g.category;
                 const isExternal = d.open_in_new_tab;
-                const href = isExternal ? d.upstream_url : `/d/${d.slug}`;
+                const isNative = !isExternal && d.upstream_url?.startsWith("/");
+                const href = isExternal
+                  ? d.upstream_url
+                  : isNative
+                  ? d.upstream_url
+                  : `/d/${d.slug}`;
                 const linkProps = isExternal
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {};

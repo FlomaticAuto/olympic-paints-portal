@@ -45,6 +45,11 @@ export async function GET(
     return NextResponse.redirect(dash.upstream_url, 303);
   }
 
+  // Native portal pages have a relative upstream_url — redirect directly.
+  if (dash.upstream_url.startsWith("/")) {
+    return NextResponse.redirect(new URL(dash.upstream_url, req.url), 303);
+  }
+
   const upstreamBase = new URL(dash.upstream_url);
   if (!upstreamBase.pathname.endsWith("/")) upstreamBase.pathname += "/";
 
