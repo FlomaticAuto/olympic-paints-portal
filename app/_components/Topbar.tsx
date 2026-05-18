@@ -12,6 +12,7 @@ export default function Topbar({
       <ThemeToggle />
       <div className="topbar-slim-user">
         <span className="user-name">{fullName ?? "Signed in"}</span>
+        {isAdmin && <a href="/ci-tracker">CI Tracker</a>}
         {isAdmin && <a href="/admin">Admin</a>}
         <form method="POST" action="/api/logout">
           <button type="submit" className="linkish">Sign out</button>
