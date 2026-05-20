@@ -63,6 +63,15 @@ export function rewriteHtml(html: string, slug: string, upstreamBase: URL, porta
     },
   );
 
+  // Strip Next.js client-side JS bundles. The server already rendered the full
+  // page; allowing the client router to hydrate causes it to re-evaluate the
+  // current route against the upstream origin (via <base href>) and render the
+  // wrong page (e.g. leaderboard root instead of /daily/latest/AC).
+  // CSS chunks from /_next/static/css/ are NOT scripts — they load fine via
+  // <link> tags and are unaffected by this strip.
+  out = out.replace(/<script\b[^>]*\/_next\/[^>]*><\/script>/gi, "");
+  out = out.replace(/<script\b[^>]*id="__NEXT_DATA__"[^>]*>[\s\S]*?<\/script>/gi, "");
+
   // Inject the floating back-to-portal banner right after <body ...>
   const BANNER = makeBanner(portalOrigin);
   if (/<body[^>]*>/i.test(out)) {
