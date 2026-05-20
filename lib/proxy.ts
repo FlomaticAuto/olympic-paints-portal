@@ -43,8 +43,9 @@ export function rewriteHtml(html: string, slug: string, upstreamBase: URL, porta
   );
 
   // Rewrite CSS url(...) references too — inline <style> blocks fetch via url()
+  // Case-sensitive: CSS url() is always lowercase; uppercase URL() is a JS global — never rewrite it.
   out = out.replace(
-    /url\(\s*(['"]?)([^'")\s]+)\1\s*\)/gi,
+    /url\(\s*(['"]?)([^'")\s]+)\1\s*\)/g,
     (_full, q: string, url: string) => {
       if (/^(data:|#)/i.test(url)) return `url(${q}${url}${q})`;
       if (/^https?:\/\//i.test(url)) {
