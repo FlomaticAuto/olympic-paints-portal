@@ -57,7 +57,9 @@ export async function GET(
     return new NextResponse("Not found", { status: 404 });
   }
   const ext = path.extname(filePath).toLowerCase();
-  return new NextResponse(data, {
+  // `Buffer` isn't a valid BodyInit in Next.js's strict TS types — wrap in
+  // Uint8Array (which shares the same memory) so we can return raw bytes.
+  return new NextResponse(new Uint8Array(data), {
     status: 200,
     headers: { "content-type": MIME[ext] ?? "application/octet-stream" },
   });
