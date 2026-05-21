@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-navy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Sales Report — 2026-W21 — Olympic Paints</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>var t=localStorage.getItem('oly-theme');if(t)document.documentElement.className=t;</script>
+<style>
+/* ── RAW DESIGN TOKENS ─────────────────────────────────────────── */
+:root {
+  /* Yellow ramp */
+  --_y50:#FEF9E0; --_y100:#FDF0A0; --_y200:#FAE04D;
+  --_y400:#F5C400; --_y600:#D4A800; --_y800:#A88000; --_y900:#6A5000;
+
+  /* Navy ramp */
+  --_n50:#E8EFF8; --_n100:#B8CCE8; --_n300:#6B9ED0;
+  --_n500:#2D6BA8; --_n700:#1A3D6E; --_n900:#0D2040; --_n950:#071022;
+
+  /* Neutral ramp */
+  --_g0:#FFFFFF; --_g50:#F7F6F3; --_g100:#E8E7E2; --_g200:#C8C7C0;
+  --_g400:#949390; --_g600:#5C5B58; --_g800:#2E2E2C;
+  --_g900:#1A1A18; --_g950:#0D0D0B;
+
+  /* Mood / accent */
+  --_teal:#2D8C7A; --_teal-light:#C8EDE7; --_teal-dark:#1a5c50;
+  --_terra:#C97A3A; --_terra-light:#F7E0C8;
+  --_coral:#E86060; --_coral-light:#FDDCDC;
+  --_pink:#E87BAD; --_pink-light:#FCE4EF;
+  --_violet:#9B7DBF; --_violet-light:#EDE0F7;
+  --_sage:#7A8C55; --_ink:#5C6B7A;
+
+  /* Typography */
+  --font-display:'Barlow Condensed',sans-serif;
+  --font-body:'Barlow',sans-serif;
+
+  /* Radius */
+  --r-sm:4px; --r-md:8px; --r-lg:12px; --r-xl:16px; --r-pill:50px;
+}
+
+/* ── LIGHT THEME ──────────────────────────────────────────────── */
+.theme-light {
+  color-scheme:light;
+  --color-surface-page:var(--_g50); --color-surface-base:var(--_g0);
+  --color-surface-elevated:var(--_g0); --color-surface-sunken:var(--_g100);
+  --color-surface-overlay:rgba(0,0,0,0.04);
+  --color-surface-brand:var(--_y400); --color-surface-secondary:var(--_n700);
+  --color-text-primary:var(--_g950); --color-text-secondary:var(--_g600);
+  --color-text-tertiary:var(--_g400); --color-text-on-brand:var(--_g950);
+  --color-text-on-navy:var(--_g0);
+  --color-brand-primary:var(--_y400); --color-brand-hover:var(--_y600);
+  --color-brand-secondary:var(--_n700); --color-brand-accent:var(--_y400);
+  --color-border-subtle:var(--_g100); --color-border-default:var(--_g200);
+  --color-border-strong:var(--_g400); --color-border-brand:var(--_y400);
+  --color-success-bg:#EDF7F5; --color-success-fg:var(--_teal-dark); --color-success-bd:var(--_teal);
+  --color-warning-bg:var(--_y50); --color-warning-fg:var(--_y900); --color-warning-bd:var(--_y600);
+  --color-danger-bg:#FEF2F2; --color-danger-fg:#C0392B; --color-danger-bd:var(--_coral);
+  --color-info-bg:var(--_n50); --color-info-fg:var(--_n700); --color-info-bd:var(--_n500);
+  --color-neutral-bg:var(--_g100); --color-neutral-fg:var(--_g600); --color-neutral-bd:var(--_g400);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.08); --shadow-md:0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg:0 10px 30px rgba(0,0,0,0.10); --shadow-brand:0 4px 16px rgba(245,196,0,0.20);
+}
+
+/* ── DARK THEME ───────────────────────────────────────────────── */
+.theme-dark {
+  color-scheme:dark;
+  --color-surface-page:var(--_g950); --color-surface-base:var(--_g900);
+  --color-surface-elevated:var(--_g800); --color-surface-sunken:var(--_g950);
+  --color-surface-overlay:rgba(255,255,255,0.04);
+  --color-surface-brand:var(--_y400); --color-surface-secondary:var(--_n700);
+  --color-text-primary:var(--_g100); --color-text-secondary:var(--_g400);
+  --color-text-tertiary:var(--_g600); --color-text-on-brand:var(--_g950);
+  --color-text-on-navy:var(--_g0);
+  --color-brand-primary:var(--_y400); --color-brand-hover:var(--_y200);
+  --color-brand-secondary:var(--_n700); --color-brand-accent:var(--_y400);
+  --color-border-subtle:rgba(255,255,255,0.06); --color-border-default:rgba(255,255,255,0.10);
+  --color-border-strong:rgba(255,255,255,0.20); --color-border-brand:var(--_y400);
+  --color-success-bg:rgba(45,140,122,0.12); --color-success-fg:var(--_teal-light); --color-success-bd:rgba(45,140,122,0.30);
+  --color-warning-bg:rgba(245,196,0,0.10); --color-warning-fg:var(--_y200); --color-warning-bd:rgba(245,196,0,0.25);
+  --color-danger-bg:rgba(232,96,96,0.12); --color-danger-fg:var(--_coral-light); --color-danger-bd:rgba(232,96,96,0.30);
+  --color-info-bg:rgba(26,61,110,0.30); --color-info-fg:var(--_n100); --color-info-bd:rgba(107,158,208,0.30);
+  --color-neutral-bg:rgba(255,255,255,0.05); --color-neutral-fg:var(--_g400); --color-neutral-bd:rgba(255,255,255,0.10);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.40); --shadow-md:0 4px 12px rgba(0,0,0,0.40);
+  --shadow-lg:0 10px 30px rgba(0,0,0,0.50); --shadow-brand:0 4px 20px rgba(245,196,0,0.15);
+}
+
+/* ── BRAND THEME (full yellow) ────────────────────────────────── */
+.theme-brand {
+  color-scheme:light;
+  --color-surface-page:var(--_y400); --color-surface-base:var(--_y200);
+  --color-surface-elevated:var(--_y50); --color-surface-sunken:var(--_y600);
+  --color-surface-overlay:rgba(0,0,0,0.05);
+  --color-surface-brand:var(--_y400); --color-surface-secondary:var(--_g950);
+  --color-text-primary:var(--_g950); --color-text-secondary:var(--_y900);
+  --color-text-tertiary:var(--_y800); --color-text-on-brand:var(--_g950);
+  --color-text-on-navy:var(--_g0);
+  --color-brand-primary:var(--_g950); --color-brand-hover:var(--_n700);
+  --color-brand-secondary:var(--_n700); --color-brand-accent:var(--_g950);
+  --color-border-subtle:rgba(0,0,0,0.08); --color-border-default:rgba(0,0,0,0.14);
+  --color-border-strong:rgba(0,0,0,0.25); --color-border-brand:var(--_g950);
+  --color-success-bg:rgba(45,140,122,0.12); --color-success-fg:var(--_teal-dark); --color-success-bd:var(--_teal);
+  --color-warning-bg:rgba(0,0,0,0.08); --color-warning-fg:var(--_y900); --color-warning-bd:var(--_y900);
+  --color-danger-bg:rgba(232,96,96,0.12); --color-danger-fg:#C0392B; --color-danger-bd:var(--_coral);
+  --color-info-bg:rgba(26,61,110,0.10); --color-info-fg:var(--_n900); --color-info-bd:var(--_n700);
+  --color-neutral-bg:rgba(0,0,0,0.06); --color-neutral-fg:var(--_y900); --color-neutral-bd:rgba(0,0,0,0.15);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.12); --shadow-md:0 4px 12px rgba(0,0,0,0.14);
+  --shadow-lg:0 10px 30px rgba(0,0,0,0.18); --shadow-brand:0 4px 16px rgba(0,0,0,0.15);
+}
+
+/* ── NAVY EXECUTIVE THEME ─────────────────────────────────────── */
+.theme-navy {
+  color-scheme:dark;
+  --color-surface-page:var(--_n950); --color-surface-base:var(--_n900);
+  --color-surface-elevated:var(--_n700); --color-surface-sunken:var(--_n950);
+  --color-surface-overlay:rgba(255,255,255,0.04);
+  --color-surface-brand:var(--_y400); --color-surface-secondary:var(--_n700);
+  --color-text-primary:var(--_g0); --color-text-secondary:var(--_n100);
+  --color-text-tertiary:var(--_n300); --color-text-on-brand:var(--_g950);
+  --color-text-on-navy:var(--_g0);
+  --color-brand-primary:var(--_y400); --color-brand-hover:var(--_y200);
+  --color-brand-secondary:var(--_n500); --color-brand-accent:var(--_y400);
+  --color-border-subtle:rgba(107,158,208,0.12); --color-border-default:rgba(107,158,208,0.20);
+  --color-border-strong:rgba(107,158,208,0.35); --color-border-brand:var(--_y400);
+  --color-success-bg:rgba(45,140,122,0.15); --color-success-fg:var(--_teal-light); --color-success-bd:rgba(45,140,122,0.35);
+  --color-warning-bg:rgba(245,196,0,0.12); --color-warning-fg:var(--_y200); --color-warning-bd:rgba(245,196,0,0.30);
+  --color-danger-bg:rgba(232,96,96,0.14); --color-danger-fg:var(--_coral-light); --color-danger-bd:rgba(232,96,96,0.35);
+  --color-info-bg:rgba(45,107,168,0.20); --color-info-fg:var(--_n100); --color-info-bd:rgba(107,158,208,0.35);
+  --color-neutral-bg:rgba(255,255,255,0.05); --color-neutral-fg:var(--_n300); --color-neutral-bd:rgba(255,255,255,0.12);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.50); --shadow-md:0 4px 12px rgba(0,0,0,0.50);
+  --shadow-lg:0 10px 30px rgba(0,0,0,0.60); --shadow-brand:0 4px 20px rgba(245,196,0,0.18);
+}
+
+/* ── COMPONENT STYLES ─────────────────────────────────────────── */
+body { background:var(--color-surface-page); color:var(--color-text-primary); font-family:var(--font-body); margin:0; }
+.hero { padding:24px; background:var(--color-surface-base); border-bottom:1px solid var(--color-border-default); display:flex; align-items:center; gap:16px; }
+.hero-logo { width:48px; height:48px; border-radius:50%; overflow:hidden; flex-shrink:0; }
+.hero-logo img { display:block; width:100%; height:100%; object-fit:cover; }
+.hero-title { font-family:var(--font-display); font-weight:900; font-size:32px; text-transform:uppercase; letter-spacing:0.02em; }
+.hero-meta { color:var(--color-text-secondary); font-size:13px; margin-top:4px; }
+.live-badge { background:var(--color-brand-primary); color:var(--color-text-on-brand); padding:2px 10px; border-radius:var(--r-pill); font-family:var(--font-display); font-weight:800; font-size:11px; letter-spacing:0.08em; }
+.locked-badge { background:var(--color-text-tertiary); color:var(--color-text-on-brand); padding:2px 10px; border-radius:var(--r-pill); font-family:var(--font-display); font-weight:800; font-size:11px; letter-spacing:0.08em; }
+.section { padding:24px; border-bottom:1px solid var(--color-border-default); }
+.section h2 { font-family:var(--font-display); font-weight:800; font-size:22px; text-transform:uppercase; letter-spacing:0.04em; margin:0 0 12px; }
+.empty { color:var(--color-text-tertiary); font-style:italic; }
+.group { margin-bottom:20px; }
+.group-title { font-family:var(--font-display); font-weight:700; font-size:14px; text-transform:uppercase; letter-spacing:0.08em; color:var(--color-text-secondary); margin-bottom:8px; }
+.card { background:var(--color-surface-elevated); border:1px solid var(--color-border-default); border-radius:var(--r-md); padding:14px; margin-bottom:10px; }
+.card-summary { font-weight:600; margin-bottom:6px; }
+.card-text { color:var(--color-text-secondary); font-size:14px; }
+.card-meta { color:var(--color-text-tertiary); font-size:11px; margin-top:8px; }
+.media-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:6px; margin-top:8px; }
+.media-grid img { width:100%; height:90px; object-fit:cover; border-radius:var(--r-sm); cursor:pointer; }
+.media-link { display:block; padding:8px 10px; background:var(--color-surface-base); border:1px solid var(--color-border-default); border-radius:var(--r-sm); color:var(--color-text-secondary); font-size:12px; text-decoration:none; }
+.media-link:hover { color:var(--color-brand-primary); }
+.exec ul { margin:0; padding-left:20px; }
+.exec li { margin-bottom:6px; }
+.theme-bar { display:flex; gap:4px; padding:8px 16px; background:var(--color-surface-elevated); border-bottom:1px solid var(--color-border-default); }
+.theme-bar button { background:transparent; color:var(--color-text-secondary); border:1px solid var(--color-border-default); border-radius:var(--r-sm); padding:4px 10px; font-family:var(--font-body); font-size:12px; cursor:pointer; }
+.theme-bar button.active { background:var(--color-brand-primary); color:var(--color-text-on-brand); border-color:var(--color-brand-primary); }
+.footer { padding:16px 24px; color:var(--color-text-tertiary); font-size:12px; }
+</style>
+</head>
+<body>
+
+<div class="theme-bar">
+  <button onclick="olyTheme('theme-light',this)">Light</button>
+  <button onclick="olyTheme('theme-dark',this)">Dark</button>
+  <button onclick="olyTheme('theme-brand',this)">Brand</button>
+  <button onclick="olyTheme('theme-navy',this)" class="active">Navy</button>
+</div>
+
+<div class="hero">
+  <div class="hero-logo"><img src="logo.jpg" alt="Olympic Paints" width="48" height="48"></div>
+  <div>
+    <div class="hero-title">Weekly Sales Report — 2026-W21</div>
+    <div class="hero-meta">
+      18 May – 24 May 2026 · 1 notes · 0 photos ·
+<span class="live-badge">LIVE</span>    </div>
+  </div>
+</div>
+
+<div class="section exec">
+  <h2>Executive Summary</h2>
+    <ul><li>1 notes captured this week.</li><li>0 rep-feedback items, 0 quality/ops items, 1 other observations.</li></ul>
+</div>
+
+<div class="section">
+  <h2>Rep Feedback (0)</h2>
+    <p class="empty">No rep feedback logged this week.</p>
+</div>
+
+<div class="section">
+  <h2>Quality &amp; Operations (0)</h2>
+    <p class="empty">No quality or operations notes logged this week.</p>
+</div>
+
+<div class="section">
+  <h2>Other Observations (1)</h2>
+      <div class="group">
+        <div class="group-title">Misc — 1 note</div>
+          <div class="card">
+            <div class="card-summary">BV mentioned Polokwane Build It tinting opportunity</div>
+            <div class="card-text">Smoke test: BV mentioned Polokwane Build It tinting opportunity #rep:BV</div>
+            <div class="card-meta">2026-05-21T21:54:52.093296+02:00</div>
+          </div>
+      </div>
+</div>
+
+<div class="section">
+  <h2>Unclassified (0)</h2>
+    <p class="empty">All notes classified.</p>
+</div>
+
+<div class="footer">
+  Olympic Paints Weekly Sales Report · 2026-W21
+</div>
+
+<script>
+const OLY_THEMES=['theme-light','theme-dark','theme-brand','theme-navy'];
+function olyTheme(t,btn){
+  document.documentElement.classList.remove(...OLY_THEMES);
+  document.documentElement.classList.add(t);
+  localStorage.setItem('oly-theme',t);
+  document.querySelectorAll('.theme-bar button').forEach(b=>b.classList.toggle('active',b===btn));
+}
+</script>
+</body>
+</html>
