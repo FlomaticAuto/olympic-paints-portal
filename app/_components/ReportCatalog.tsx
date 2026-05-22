@@ -118,9 +118,7 @@ export default function ReportCatalog({ groups }: { groups: Group[] }) {
                   : isNative
                   ? d.upstream_url
                   : `/d/${d.slug}`;
-                const linkProps = isExternal
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {};
+                const linkProps = { target: "_blank", rel: "noopener noreferrer" };
                 return (
                   <a
                     key={d.id}

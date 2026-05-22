@@ -67,8 +67,7 @@ export async function GET(
       dashboardSlug: slug,
     });
     const html = await upstreamRes.text();
-    const portalOrigin = new URL(req.url).origin;
-    return new NextResponse(rewriteHtml(html, slug, upstreamBase, portalOrigin), {
+    return new NextResponse(rewriteHtml(html, slug, upstreamBase), {
       status: upstreamRes.status,
       headers: {
         "content-type": ct,
