@@ -45,8 +45,7 @@ export async function GET(
 
   if (/text\/html/i.test(ct)) {
     const html = await upstreamRes.text();
-    const portalOrigin = new URL(req.url).origin;
-    return new NextResponse(rewriteHtml(html, slug, upstreamBase, portalOrigin), {
+    return new NextResponse(rewriteHtml(html, slug, upstreamBase), {
       status: upstreamRes.status,
       headers: {
         "content-type": ct,
