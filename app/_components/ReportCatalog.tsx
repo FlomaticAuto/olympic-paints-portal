@@ -86,20 +86,31 @@ export default function ReportCatalog({ groups }: { groups: Group[] }) {
 
   return (
     <>
-      <nav className="report-tabs" role="tablist" aria-label="Report categories">
-        {tabs.map((t) => (
-          <button
-            key={t.id}
-            role="tab"
-            aria-selected={active === t.id}
-            className={`report-tab ${active === t.id ? "active" : ""}`}
-            onClick={() => setActive(t.id)}
-          >
-            {t.label}
-            <span className="report-tab-count">{t.count}</span>
-          </button>
-        ))}
-      </nav>
+      <div
+        style={{
+          position: "sticky",
+          top: 45,
+          zIndex: 99,
+          background: "var(--color-surface-page)",
+          borderBottom: "1px solid var(--color-border-default)",
+          width: "100%",
+        }}
+      >
+        <nav className="report-tabs" style={{ borderBottom: "none" }} role="tablist" aria-label="Report categories">
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              role="tab"
+              aria-selected={active === t.id}
+              className={`report-tab ${active === t.id ? "active" : ""}`}
+              onClick={() => setActive(t.id)}
+            >
+              {t.label}
+              <span className="report-tab-count">{t.count}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
 
       <div className="catalog">
         {visibleGroups.map((g) => (
