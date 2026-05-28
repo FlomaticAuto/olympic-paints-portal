@@ -76,6 +76,7 @@ body {
   min-height: 100dvh;
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+  padding-top: 45px;
 }
 
 a { color: var(--color-brand-primary); text-decoration: none; }
@@ -96,8 +97,10 @@ button, input {
   gap: 16px;
   font-size: 13px;
   border-bottom: 1px solid rgba(0,0,0,0.20);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
 }
 .topbar-slim-user {
@@ -172,6 +175,7 @@ button, input {
 .login-wrap {
   min-height: 100dvh; display: flex; align-items: center; justify-content: center;
   padding: 24px;
+  margin-top: -45px;
 }
 .login-card {
   width: 100%; max-width: 380px;
