@@ -56,6 +56,7 @@ export async function GET(
   const upstreamRes = await fetch(upstreamBase.toString(), {
     headers: { "user-agent": "olympic-paints-portal/1.0" },
     redirect: "follow",
+    cache: "no-store",
   });
   const ct = upstreamRes.headers.get("content-type") ?? "application/octet-stream";
 
