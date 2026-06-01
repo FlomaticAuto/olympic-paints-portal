@@ -1,0 +1,24 @@
+name: Deploy to Vercel
+
+# Triggers on every push to main — replaces the broken Vercel GitHub integration.
+# REQUIRES one-time secret setup (see OPERATIONS_RUNBOOK.md → Portal Deployment):
+#   GitHub repo → Settings → Secrets → Actions → VERCEL_TOKEN
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Deploy to production
+        run: vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: team_AmRawNXxWBPG8XynyAV41bVp
+          VERCEL_PROJECT_ID: prj_XJDVs83Ajb4zzixTR6czZT94PTIV
