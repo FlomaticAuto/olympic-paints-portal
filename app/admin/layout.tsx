@@ -13,6 +13,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <a href="/">&larr; Portal</a>
           <a href="/admin/users">Users</a>
           <a href="/admin">Permissions</a>
+          <a href="/admin/whatsapp-blast">WhatsApp Blast</a>
         </nav>
         {children}
       </div>
