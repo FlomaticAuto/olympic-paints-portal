@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "seed": "tsx scripts/seed.ts",
-    "reset-password": "tsx scripts/reset-password.ts"
+    "reset-password": "tsx scripts/reset-password.ts",
+    "update-store-visit-url": "tsx scripts/update-store-visit-url.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
