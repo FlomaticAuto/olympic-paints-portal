@@ -33,7 +33,19 @@ export default async function HomePage() {
     );
   }
 
-  const dashboards = (data ?? []) as unknown as Dashboard[];
+  // Migrate any stale JotForm store-visit URL to the Supabase form
+  const OLD_JOTFORM_STORE_VISIT = "260431710573046";
+  const NEW_STORE_VISIT_URL = "https://olympic-paints-forms-admin.vercel.app/store-visit-booking";
+  const rawDashboards = (data ?? []) as unknown as Dashboard[];
+  const staleRow = rawDashboards.find(d => d.upstream_url?.includes(OLD_JOTFORM_STORE_VISIT));
+  if (staleRow) {
+    supabase.from("dashboards").update({ upstream_url: NEW_STORE_VISIT_URL }).eq("id", staleRow.id).then(() => {});
+  }
+  const dashboards = rawDashboards.map(d =>
+    d.upstream_url?.includes(OLD_JOTFORM_STORE_VISIT)
+      ? { ...d, upstream_url: NEW_STORE_VISIT_URL }
+      : d
+  );
 
   const groups: { category: string; items: Dashboard[] }[] = [];
   const seen = new Map<string, number>();
