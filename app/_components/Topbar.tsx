@@ -15,6 +15,7 @@ export default function Topbar({
       <ThemeToggle />
       <div className="topbar-slim-user">
         <span className="user-name">{fullName ?? "Signed in"}</span>
+        <a href="/customer-trends">Customer Trends</a>
         {isAdmin && <a href="/ci-tracker">CI Tracker</a>}
         {isAdmin && <a href="/admin/whatsapp-blast">WhatsApp Blast</a>}
         {isAdmin && <a href="/admin">Admin</a>}
