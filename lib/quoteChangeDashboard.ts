@@ -10,6 +10,7 @@ export type QuoteChangeRow = {
   event_date: string | null;
   event_type: string | null;
   account: string | null;
+  store_dlref: string | null;
   reason_code: string | null;
   revision_no: number | null;
   note: string | null;
@@ -82,7 +83,7 @@ export function buildQuoteChangeDashboard(rows: QuoteChangeRow[]): string {
         `<td class='mono'>${esc(r.event_date)}</td>` +
         `<td><span class='chip'>${esc(r.rep_code)}</span> ${esc(REP_NAMES[r.rep_code ?? ""] ?? "")}</td>` +
         `<td>${esc(r.event_type)}</td>` +
-        `<td>${esc(r.account || "—")}</td>` +
+        `<td>${esc(r.account || "—")}${r.store_dlref ? `<span class='dlref'>${esc(r.store_dlref)}</span>` : ""}</td>` +
         `<td>${esc(r.reason_code)}</td>` +
         `<td class='num'>${esc(r.revision_no ?? "")}</td>` +
         `<td>${esc(r.logged_by || "")}</td>` +
@@ -149,6 +150,7 @@ td.mono,td.num{font-variant-numeric:tabular-nums;}
 td.num{text-align:center;font-weight:700;}
 td.muted{color:var(--muted);max-width:280px;}
 .chip{display:inline-block;background:var(--gold);color:#0D0D0B;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;padding:2px 7px;border-radius:5px;letter-spacing:.03em;}
+.dlref{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:.04em;color:var(--muted);margin-top:2px;}
 .tablewrap{overflow-x:auto;}
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
 .filters input,.filters select{background:var(--sunken);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 12px;font-family:'Barlow',sans-serif;font-size:14px;min-height:42px;}

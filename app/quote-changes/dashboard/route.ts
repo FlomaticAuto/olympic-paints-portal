@@ -13,7 +13,7 @@ export async function GET() {
   const { data, error } = await backendSupabase()
     .from("quote_change_log")
     .select(
-      "entry_ref,rep_code,rep_name,logged_by,event_date,event_type,account,reason_code,revision_no,note",
+      "entry_ref,rep_code,rep_name,logged_by,event_date,event_type,account,store_dlref,reason_code,revision_no,note",
     )
     .order("event_date", { ascending: false })
     .order("created_at", { ascending: false });
