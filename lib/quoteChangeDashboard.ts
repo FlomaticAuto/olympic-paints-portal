@@ -125,7 +125,8 @@ html.theme-navy{--p:#071022;--base:#0D2040;--elev:#1A3D6E;--sunken:#071022;--gol
 body{margin:0;background:var(--p);color:var(--text);font-family:'Barlow',sans-serif;}
 .wrap{max-width:1180px;margin:0 auto;padding:22px 20px 60px;}
 header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px;}
-.disc{width:40px;height:40px;border-radius:50%;background:var(--gold);flex-shrink:0;box-shadow:0 2px 10px rgba(246,195,36,.3);}
+.disc{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.22);}
+.disc img{display:block;width:100%;height:100%;object-fit:cover;}
 .title h1{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;text-transform:uppercase;letter-spacing:.02em;margin:0;line-height:1;}
 .title .sub{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);margin-top:4px;}
 .themes{display:flex;gap:4px;background:var(--sunken);border-radius:9px;padding:4px;margin-left:auto;}
@@ -161,7 +162,7 @@ td.muted{color:var(--muted);max-width:280px;}
 <body>
 <div class="wrap">
   <header>
-    <div class="disc"></div>
+    <div class="disc"><img src="https://flomaticauto.github.io/olympic-paints-clocking/logo.jpg" alt="Olympic Paints" width="40" height="40"/></div>
     <div class="title">
       <h1>Quote &amp; Price Change Tracker</h1>
       <div class="sub">Sales Admin Rework Log · Olympic Paints</div>
