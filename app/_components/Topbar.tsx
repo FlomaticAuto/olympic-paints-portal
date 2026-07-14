@@ -19,6 +19,7 @@ export default function Topbar({
         {isAdmin && <a href="/ci-tracker">CI Tracker</a>}
         {isAdmin && <a href="/quote-changes">Quote Changes</a>}
         {isAdmin && <a href="/admin/whatsapp-blast">WhatsApp Blast</a>}
+        {isAdmin && <a href="/file-management">File Management</a>}
         {isAdmin && <a href="/admin">Admin</a>}
         <form method="POST" action="/api/logout">
           <button type="submit" className="linkish">Sign out</button>
