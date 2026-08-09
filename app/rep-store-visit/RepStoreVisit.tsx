@@ -14,6 +14,26 @@ const VISIT_TYPES = [
   "Promo Setup",
 ] as const;
 
+// Rep codes match stores.rep in the forms-admin project, which is what the
+// store lookup filters on. Codes per CLAUDE.md.
+const REPS = [
+  { code: "AC", name: "Aboo Cassim" },
+  { code: "AP", name: "Amit Patel" },
+  { code: "BV", name: "Bhadresh Vallabh" },
+  { code: "NP", name: "Nikhil Panchal" },
+  { code: "BM", name: "Byron Minnie" },
+] as const;
+
+type StoreHit = {
+  id: string;
+  name: string;
+  code: string | null;
+  dlref: string | null;
+  curef: string | null;
+  town: string | null;
+  area: string | null;
+};
+
 type Fix = {
   lat: number;
   lng: number;
@@ -62,9 +82,19 @@ function csvCell(v: unknown): string {
   return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
+// Session name -> rep code, so a signed-in rep lands on their own list.
+function repCodeFor(fullName: string): string {
+  const n = fullName.trim().toLowerCase();
+  return REPS.find((r) => r.name.toLowerCase() === n)?.code ?? "";
+}
+
 export default function RepStoreVisit({ defaultRep }: { defaultRep: string }) {
-  const [rep, setRep] = useState(defaultRep);
+  const [repCode, setRepCode] = useState(() => repCodeFor(defaultRep));
   const [store, setStore] = useState("");
+  const [hits, setHits] = useState<StoreHit[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [picked, setPicked] = useState(false);
+  const [lookupDown, setLookupDown] = useState(false);
   const [type, setType] = useState<string>(VISIT_TYPES[0]);
   const [contact, setContact] = useState("");
   const [notes, setNotes] = useState("");
@@ -100,11 +130,45 @@ export default function RepStoreVisit({ defaultRep }: { defaultRep: string }) {
     }
     try {
       const saved = localStorage.getItem(KEY_REP);
-      if (saved) setRep(saved);
+      if (saved && REPS.some((r) => r.code === saved)) setRepCode(saved);
     } catch {
       /* storage blocked (Safari Private Mode) — session name stands in */
     }
   }, []);
+
+  // Rep-scoped store lookup. Debounced so a fast typist fires one request, not ten.
+  useEffect(() => {
+    const q = store.trim();
+    if (picked || q.length < 2) {
+      setHits([]);
+      setSearching(false);
+      return;
+    }
+    const ctl = new AbortController();
+    setSearching(true);
+    const t = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `/api/rep-stores?q=${encodeURIComponent(q)}&rep=${encodeURIComponent(repCode)}`,
+          { signal: ctl.signal },
+        );
+        if (!res.ok) throw new Error(String(res.status));
+        setHits((await res.json()) as StoreHit[]);
+        setLookupDown(false);
+      } catch (e) {
+        if ((e as Error).name === "AbortError") return;
+        // Lookup is a convenience — the field still accepts a typed name.
+        setHits([]);
+        setLookupDown(true);
+      } finally {
+        setSearching(false);
+      }
+    }, 300);
+    return () => {
+      ctl.abort();
+      clearTimeout(t);
+    };
+  }, [store, repCode, picked]);
 
   const persist = useCallback(
     (next: Visit[]) => {
@@ -177,11 +241,11 @@ export default function RepStoreVisit({ defaultRep }: { defaultRep: string }) {
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    const r = rep.trim();
+    const repName = REPS.find((r) => r.code === repCode)?.name ?? "";
     const s = store.trim();
-    setInvalid({ rep: !r, store: !s });
-    if (!r) {
-      toast("Rep name is required.", "error");
+    setInvalid({ rep: !repName, store: !s });
+    if (!repName) {
+      toast("Select a rep.", "error");
       return;
     }
     if (!s) {
@@ -193,7 +257,7 @@ export default function RepStoreVisit({ defaultRep }: { defaultRep: string }) {
       ...visits,
       {
         ts: Date.now(),
-        rep: r,
+        rep: repName,
         store: s,
         type,
         contact: contact.trim(),
@@ -202,12 +266,14 @@ export default function RepStoreVisit({ defaultRep }: { defaultRep: string }) {
       },
     ]);
     try {
-      localStorage.setItem(KEY_REP, r);
+      localStorage.setItem(KEY_REP, repCode);
     } catch {
       /* non-fatal */
     }
 
     setStore("");
+    setPicked(false);
+    setHits([]);
     setContact("");
     setNotes("");
     toast(fix ? "Visit logged with GPS." : "Visit logged without GPS.", fix ? "ok" : "info");
@@ -291,32 +357,80 @@ export default function RepStoreVisit({ defaultRep }: { defaultRep: string }) {
         <h2>Visit Details</h2>
 
         <div className={css.field}>
-          <label htmlFor="rsv-rep">Rep name</label>
-          <input
+          <label htmlFor="rsv-rep">Rep</label>
+          <select
             id="rsv-rep"
-            value={rep}
+            value={repCode}
             onChange={(e) => {
-              setRep(e.target.value);
+              setRepCode(e.target.value);
               setInvalid((v) => ({ ...v, rep: false }));
+              // Their store list just changed — drop a selection made under the old rep.
+              setStore("");
+              setPicked(false);
+              setHits([]);
             }}
             className={invalid.rep ? css.invalid : undefined}
-            placeholder="e.g. Byron Minnie"
-            autoComplete="name"
-          />
+          >
+            <option value="">— Select rep —</option>
+            {REPS.map((r) => (
+              <option key={r.code} value={r.code}>
+                {r.name} ({r.code})
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className={css.field}>
           <label htmlFor="rsv-store">Store name</label>
-          <input
-            id="rsv-store"
-            value={store}
-            onChange={(e) => {
-              setStore(e.target.value);
-              setInvalid((v) => ({ ...v, store: false }));
-            }}
-            className={invalid.store ? css.invalid : undefined}
-            placeholder="e.g. Build It Polokwane"
-          />
+          <div className={css.combo}>
+            <input
+              id="rsv-store"
+              value={store}
+              onChange={(e) => {
+                setStore(e.target.value);
+                setPicked(false);
+                setInvalid((v) => ({ ...v, store: false }));
+              }}
+              className={invalid.store ? css.invalid : undefined}
+              placeholder={repCode ? "Type 2+ letters to search…" : "Select a rep first, or type a name"}
+              autoComplete="off"
+              role="combobox"
+              aria-expanded={hits.length > 0}
+              aria-autocomplete="list"
+            />
+            {searching && <span className={css.spinner} aria-hidden="true" />}
+
+            {hits.length > 0 && (
+              <ul className={css.results}>
+                {hits.map((h) => (
+                  <li key={h.id}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setStore(h.name);
+                        setPicked(true);
+                        setHits([]);
+                        setInvalid((v) => ({ ...v, store: false }));
+                      }}
+                    >
+                      <span className={css.hitName}>{h.name}</span>
+                      <span className={css.hitMeta}>
+                        {[h.town, h.dlref ?? h.curef ?? h.code].filter(Boolean).join(" · ") || "—"}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <p className={css.fieldHint}>
+            {lookupDown
+              ? "Store lookup unavailable — type the store name manually."
+              : repCode
+                ? `Showing ${REPS.find((r) => r.code === repCode)?.name}'s stores. Not listed? Just type the name.`
+                : "Pick a rep to search only their stores."}
+          </p>
         </div>
 
         <div className={css.field}>
