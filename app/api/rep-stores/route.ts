@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
-
-// Store list lives in the forms-admin Supabase project, which the portal has no
-// credentials for. Rather than provision a second service-role key (and never in
-// this repo — it is public), proxy the existing search endpoint server-side.
-// Gated on a portal session so the portal itself adds no public surface.
-const UPSTREAM =
-  process.env.STORES_SEARCH_URL ??
-  "https://olympic-paints-forms-admin.vercel.app/api/stores/search";
+import { backendSupabase } from "@/lib/supabase";
 
 export type StoreHit = {
   id: string;
@@ -30,25 +23,20 @@ export async function GET(req: NextRequest) {
   const q = req.nextUrl.searchParams.get("q")?.trim() ?? "";
   const rep = req.nextUrl.searchParams.get("rep")?.trim() ?? "";
 
-  // Upstream ignores anything shorter; save it the round trip.
   if (q.length < 2) return NextResponse.json([]);
 
-  const url = new URL(UPSTREAM);
-  url.searchParams.set("q", q);
-  if (rep) url.searchParams.set("rep", rep);
+  let query = backendSupabase()
+    .from("stores")
+    .select("id,name,code,dlref,curef,town,area")
+    .or(`name.ilike.%${q}%,dlref.ilike.%${q}%,curef.ilike.%${q}%,code.ilike.%${q}%,town.ilike.%${q}%`)
+    .order("name")
+    .limit(20);
 
-  try {
-    const res = await fetch(url, {
-      headers: { accept: "application/json" },
-      // Store list is slow-moving; a short cache keeps repeated keystrokes cheap.
-      next: { revalidate: 300 },
-    });
-    if (!res.ok) {
-      return NextResponse.json({ error: "Store lookup unavailable" }, { status: 502 });
-    }
-    const data = (await res.json()) as StoreHit[];
-    return NextResponse.json(Array.isArray(data) ? data : []);
-  } catch {
+  if (rep) query = query.eq("rep", rep);
+
+  const { data, error } = await query;
+  if (error) {
     return NextResponse.json({ error: "Store lookup unavailable" }, { status: 502 });
   }
+  return NextResponse.json((data ?? []) as StoreHit[]);
 }
